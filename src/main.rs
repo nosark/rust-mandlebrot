@@ -1,5 +1,7 @@
 extern crate num;
 use num::Complex;
+use std::str::FromStr;
+
 
 /// Try to Determine if c is in the Mandelbrot set, using at most
 /// limit iterations to determine if c is a member.
@@ -29,12 +31,13 @@ fn escape_time(c: Complex<f64>, limit: u32) -> Option<u32> {
 /// The string should be in the following format <left><sep><right>
 /// where <sep> is a seperator argument and left and right are both 
 /// strings that can be parsed by `T::from_str`.
+#[allow(dead_code)]
 fn parse_pair<T:FromStr>(s: &str, separator: char) -> Option<(T, T)> {
-    match s.find(seperator) {
+    match s.find(separator) {
         None => None,
         Some(index) => {
             match(T::from_str(&s[..index]), T::from_str(&s[index + 1..])) {
-                (Ok(I), Ok(r)) => Some((I, r)),
+                (Ok(i), Ok(r)) => Some((i, r)),
                 _ => None
             }
         }
@@ -42,6 +45,7 @@ fn parse_pair<T:FromStr>(s: &str, separator: char) -> Option<(T, T)> {
 }
 
 /// Parse a pair of floating-point numbers seperated by a comma as a complex number
+#[allow(dead_code)]
 fn parse_complex(s: &str) -> Option<Complex<f64>> {
     match parse_pair(s, ',') {
         Some((re, im)) => Some(Complex { re, im}),
