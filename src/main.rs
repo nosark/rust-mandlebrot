@@ -1,5 +1,6 @@
 extern crate num;
 extern crate image;
+extern crate crossbeam;
 
 use num::Complex;
 use std::str::FromStr;
@@ -40,6 +41,7 @@ fn escape_time(c: Complex<f64>, limit: u32) -> Option<u32> {
 /// strings that can be parsed by `T::from_str`.
 #[allow(dead_code)]
 fn parse_pair<T:FromStr>(s: &str, separator: char) -> Option<(T, T)> {
+    println!(" parsing {}", s);
     match s.find(separator) {
         None => None,
         Some(index) => {
@@ -54,6 +56,7 @@ fn parse_pair<T:FromStr>(s: &str, separator: char) -> Option<(T, T)> {
 /// Parse a pair of floating-point numbers seperated by a comma as a complex number
 #[allow(dead_code)]
 fn parse_complex(s: &str) -> Option<Complex<f64>> {
+    println!("{}", s);
     match parse_pair(s, ',') {
         Some((re, im)) => Some(Complex { re, im}),
         None => None
@@ -90,7 +93,7 @@ fn render(pixels: &mut [u8],
             let point = pixel_to_point(bounds, (column, row),
                             upper_left, lower_right);
 
-            pixels[row * bounds.0 + column] = match escape_time(point, 255) {
+            pixels[row * bounds.0 + column] = match escape_time(point, 255) { // BUG: going out of bounds here on threads
                 None => 0,
                 Some(count) => 255 - count as u8
             };
@@ -135,10 +138,21 @@ fn test_pixel_to_point() {
                     Complex { re: 1.0, im: -1.0 }),
                     Complex { re: -0.5, im: -0.5 });
 }
+#[allow(dead_code)]
+fn check_args(arguments: & Vec<String>) {
+
+    println!("{}", arguments[0]);
+
+    for a in arguments {
+        println!("{}", a);
+    }
+}
+
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
 
+    //println!("{}", args.len());
     // if they have the incorrect (arguments / amount of arguments), tell them!
     if args.len() != 5 {
         writeln!(std::io::stderr(),
@@ -162,10 +176,37 @@ fn main() {
 
     let mut pixels = vec![0; bounds.0 * bounds.1];
 
-    render(&mut pixels, bounds, upper_left, lower_right);
+    //render(&mut pixels, bounds, upper_left, lower_right);
+
+    let threads = 8;
+    let rows_per_thread = bounds.1 / threads + 1;
+
+    {
+        let bands: Vec<&mut[u8]> =
+            pixels.chunks_mut(rows_per_thread * bounds.0).collect();
+
+        crossbeam::scope(|spawner| {
+            for(i, band) in bands.into_iter().enumerate() {
+                let top = rows_per_thread * i;
+                let height = band.len() / bounds.0;
+                let band_bounds = (bounds.0, height);
+                let band_upper_left = 
+                    pixel_to_point(bounds, (0, top), upper_left, lower_right);
+
+                let band_lower_right = 
+                    pixel_to_point(bounds, (bounds.0, top + height), upper_left, lower_right);
+
+                spawner.spawn(move || {
+                    render(band, band_bounds, band_upper_left, band_lower_right);
+                });
+            }
+        });
+    }
+
 
     write_image(&args[1], &pixels, bounds)
         .expect("error writing the PNG file");
 
+    println!(" Mandlebrot Program exited successfully");
     std::process::exit(0);
 }
