@@ -9,6 +9,7 @@ use std::fs::File;
 use std::io::Write;
 
 
+
 /// Try to Determine if c is in the Mandelbrot set, using at most
 /// limit iterations to determine if c is a member.
 /// 
@@ -164,7 +165,7 @@ fn main() {
     render(&mut pixels, bounds, upper_left, lower_right);
 
     write_image(&args[1], &pixels, bounds)
-        .expect("error writing the PNG file")
+        .expect("error writing the PNG file");
 
     std::process::exit(0);
 }
