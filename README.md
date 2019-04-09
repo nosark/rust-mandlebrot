@@ -21,6 +21,14 @@ completed.
 1. Clone this repository 
 2. Run `cargo build --release`
 3. Now run `./target/release/mandlebrot.exe FILENAME.png IMAGE_DIMENSIONS UPPERLEFT LOWERRIGHT`
-    Example: ./target/release/mandlebrot.exe mandelbrot.png 1000x750 -1.20,0.35 -1,0.20
+   
+   Example: `./target/release/mandlebrot.exe mandelbrot.png 1000x750 -1.20,0.35 -1,0.20`
+   
+   ***NOTE***: If running with powershell follow the below example and put Upperleft and LowerRight in quotes like so:
+   
+   Example: `./target/release/mandlebrot.exe mandelbrot.png 1000x750 "-1.20,0.35" "-1,0.20"`
+   
+4. Check out the rendered image in your Parent Directory!
+5.  ENJOY!
 ## References
 [Mandlebrot Set](https://en.wikipedia.org/wiki/Mandelbrot_set) https://en.wikipedia.org/wiki/Mandelbrot_set
