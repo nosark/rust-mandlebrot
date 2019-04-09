@@ -31,4 +31,4 @@ completed.
 4. Check out the rendered image in your Parent Directory!
 5.  ENJOY!
 ## References
-[Mandlebrot Set](https://en.wikipedia.org/wiki/Mandelbrot_set) https://en.wikipedia.org/wiki/Mandelbrot_set
+[Mandlebrot Set](https://en.wikipedia.org/wiki/Mandelbrot_set)
