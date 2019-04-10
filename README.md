@@ -17,10 +17,10 @@ completed.
 
 
 ## Getting Started
-
-1. Clone this repository 
-2. Run `cargo build --release`
-3. Now run `./target/release/mandlebrot.exe FILENAME.png IMAGE_DIMENSIONS UPPERLEFT LOWERRIGHT`
+1. If you haven't already, install [rust](https://www.rust-lang.org/tools/install)
+2. Clone this repository 
+3. Run `cargo build --release`
+4. Now run `./target/release/mandlebrot.exe FILENAME.png IMAGE_DIMENSIONS UPPERLEFT LOWERRIGHT`
    
    Example: `./target/release/mandlebrot.exe mandelbrot.png 1000x750 -1.20,0.35 -1,0.20`
    
@@ -28,7 +28,8 @@ completed.
    
    Example: `./target/release/mandlebrot.exe mandelbrot.png 1000x750 "-1.20,0.35" "-1,0.20"`
    
-4. Check out the rendered image in your Parent Directory!
-5.  ENJOY!
+5. Check out the rendered image in your Parent Directory!
+6.  ENJOY!
+
 ## References
 [Mandlebrot Set](https://en.wikipedia.org/wiki/Mandelbrot_set)
